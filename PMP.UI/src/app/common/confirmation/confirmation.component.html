@@ -1,0 +1,12 @@
+<div class="modal-header">
+    <h5 class="modal-title">{{title}}</h5>
+    <button type="button" class="close" aria-label="Close" (click)="dismiss()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" [innerHTML]="message">
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="decline()">{{ btnCancelText }}</button>
+    <button type="button" class="btn btn-primary" ngbAutofocus (click)="accept()">{{ btnOkText }}</button>
+  </div>

@@ -1,0 +1,131 @@
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header bg-light">
+                <div class="row justify-content-between">
+                    <div class="col-auto">
+                        <h5>Add/Update Task</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">                
+                <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+                    <div class="form-row">
+                        <div class="form-group col-6">
+                            <label for="taskProjectName">Project</label>
+                            <div class="input-group">
+                                <input type="text" placeholder="project" id="taskProjectName" class="form-control"
+                                name="ProjectName" formControlName="ProjectName" 
+                                readonly
+                                aria-label="Username" 
+                                aria-describedby="btnProjectSearch" 
+                                [ngClass]="{ 'is-invalid': tsubmitted && tf.ProjectName.errors }"/>
+                                <input type="hidden" id="ProjectID" name="ProjectID" formControlName="ProjectID" />
+                                <div class="input-group-append">
+                                    <button class="btn btn-falcon-success btn-sm" type="button" id="btnProjectSearch" (click)="onProjectSearch()" [disabled]="disableProjectSearch">Search</button>
+                                </div>
+                                <div *ngIf="tsubmitted && tf.ProjectName.errors" class="invalid-feedback">
+                                    <div *ngIf="tf.ProjectName.errors.required">Project is required. please select one</div>
+                                </div>
+                            </div>                            
+                        </div>
+                        <div class="form-group col-6">
+                            <label for="taskName">Task Name</label>
+                            <input type="text" id="taskName" name="taskName" class="form-control" placeholder="Task name"
+                                formControlName="TaskName" [ngClass]="{ 'is-invalid': tsubmitted && tf.TaskName.errors }">
+                            <div *ngIf="tsubmitted && tf.TaskName.errors" class="invalid-feedback">
+                                <div *ngIf="tf.TaskName.errors.required">Task is required.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-3 pt-4">
+                            <div class="custom-control custom-checkbox">
+                                <input class="custom-control-input" type="checkbox" id="chkIsParentTask"
+                                    formControlName="IsParentTask" (change)="onIsParentTaskCheck()" />
+                                <label class="custom-control-label" for="chkIsParentTask">Is parent task</label>
+                            </div>
+                        </div>
+                        <div class="form-group col-9">
+                            <label for="parentTaskName">Parent Task</label>
+                            <div class="input-group">
+                                <input type="text" placeholder="parent task" id="parentTaskName" class="form-control"
+                                name="ParentTaskName" formControlName="ParentTaskName" 
+                                readonly 
+                                aria-label="Username" aria-describedby="btnParentTaskSearch"
+                                [ngClass]="{ 'is-invalid': tsubmitted && tf.ParentTaskName.errors }">
+                                <input type="hidden" id="ParentTaskID" name="ParentTaskID" formControlName="ParentTaskID">  
+                                <div class="input-group-append">
+                                    <button class="btn btn-falcon-success btn-sm" type="button" id="btnParentTaskSearch" [disabled]="disableParentTaskSearch" (click)="onParentTaskSearch()">Search</button>
+                                </div>
+                                <div *ngIf="tsubmitted && tf.ParentTaskName.errors" class="invalid-feedback">
+                                    <div *ngIf="tf.ParentTaskName.errors.dependentRequired">Parent task required. Please select one</div>
+                                </div>
+                            </div>                                                              
+                        </div>
+                    </div>
+                    <div class="form-row">                        
+                        <div class="form-group col-6">
+                            <label for="taskStartDate">Start Date</label>
+                            <input type="date" placeholder="start date" id="taskStartDate" class="form-control"
+                                name="startDate" formControlName="StartDate"
+                                 [ngClass]="{ 'is-invalid': tsubmitted && tf.StartDate.errors }" />
+                            <div *ngIf="tsubmitted && tf.StartDate.errors" class="invalid-feedback">
+                                <div *ngIf="tf.StartDate.errors.required">Start date is required.</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-6">
+                            <label for="taskEndDate">End Date</label>
+                            <input type="date" placeholder="end date" id="taskEndDate" class="form-control" name="endDate"
+                                formControlName="EndDate" 
+                                [ngClass]="{ 'is-invalid': tsubmitted && tf.EndDate.errors }"/>
+                            <div *ngIf="tsubmitted && tf.EndDate.errors" class="invalid-feedback">
+                                <div *ngIf="tf.EndDate.errors.required">End date is required.</div>
+                            </div>
+                        </div>
+                    </div>   
+                    <div class="form-row">
+                        <div class="form-group col-2 pt-3">
+                            <label>Priority</label> 
+                        </div>
+                        <div class="form-group col-10 fs--1">
+                            <ng5-slider [options]="options" formControlName="Priority"></ng5-slider>
+                        </div>
+                    </div>                                     
+                    <div class="form-row">
+                        <div class="form-group col-12">
+                            <label for="userName">Assign to User</label>
+                            <div class="input-group">
+                                <input type="text" placeholder="User name" id="userName" class="form-control"
+                                name="UserName" formControlName="UserName" 
+                                readonly
+                                [ngClass]="{ 'is-invalid': tsubmitted && tf.UserName.errors }"
+                                aria-label="Username" 
+                                aria-describedby="btnUserSearch"  />
+                                <input type="hidden" id="UserID" name="UserID" formControlName="UserID"/>
+                                <div class="input-group-append">
+                                    <button class="btn btn-falcon-success btn-sm" type="button" id="btnUserSearch" (click)="onUserSearch()">Search</button>
+                                </div>
+                                <div *ngIf="tsubmitted && tf.UserName.errors" class="invalid-feedback">
+                                    <div *ngIf="tf.UserName.errors.required">User is required. Please select one</div>
+                                </div>
+                            </div>                            
+                        </div>
+                    </div>
+                    <div class="form-row justify-content-between align-items-center">
+                        <div class="form-group col-4">
+                            <button type="submit" value="Add" class="btn btn-success btn-block">
+                                {{teditmode?"Update":"Add"}}
+                            </button>
+                        </div>
+                        <div class="form-group col-4">
+                            <button type="button" value="Reset" class="btn btn-danger btn-block" (click)="onFormReset()">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>    
+</div>

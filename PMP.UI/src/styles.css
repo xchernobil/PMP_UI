@@ -1,0 +1,49 @@
+/* You can add global styles to this file, and also import other style files */
+@import "./assets/css/theme.min.css";
+@import "./assets/css/font.style.css";
+@import "~angular-notifier/styles";
+body { background-color: #ffffff;font-size: 11pt;margin:0px 8px !important; }
+.tab-content{
+    background-color: #edf2f9 
+}
+.nav-tabs .nav-link{
+    border-top-left-radius: unset;
+    border-top-right-radius: unset;
+}
+.nav-item .active{
+    border-top: 3px solid #7089fa !important;
+}
+
+.form-control{
+    padding: .3125rem 0.5rem !important;
+  }
+
+  .nav-link {
+    display: block;
+    padding: .2rem 1rem !important;
+  }
+
+  .content{
+    margin: 24px auto !important;
+  }
+
+  .card-header {
+    padding: 0.75rem 1.2rem;
+  }
+
+  .page-item{
+    cursor: pointer;
+  }
+
+  .page-link:hover{
+    background-color: #e4e8ec;
+    border-color: #e4e8ec;
+  }
+
+  .page-item.active .page-link {    
+    background-color: #1976d2;
+    border-color: #1976d2;
+}
+.dropdown-item{
+  cursor: pointer;
+}

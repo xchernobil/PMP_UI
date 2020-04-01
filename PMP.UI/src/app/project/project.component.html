@@ -1,0 +1,212 @@
+<div class="row">
+    <div class="col-5">
+        <div class="card">            
+            <div class="card-header bg-light">
+                <div class="row justify-content-between">
+                    <div class="col-auto">
+                        <h5>Add/Update Project</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">  
+                <!-- <div class="bg-holder d-none d-lg-block bg-card" style="background-image:url(../assets/img/corner-1.png);"></div>              -->
+                <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
+                    <div class="form-row">
+                        <div class="form-group col-12">
+                            <label for="projectName">Project Name</label>
+                            <input type="text" id="projectName" name="ProjectName" class="form-control" placeholder="Project name"
+                                formControlName="ProjectName" [ngClass]="{ 'is-invalid': psubmitted && pf.ProjectName.errors }">
+                            <input type="hidden" name="projectId" formControlName="ProjectID" />
+                            <div *ngIf="psubmitted && pf.ProjectName.errors" class="invalid-feedback">
+                                <div *ngIf="pf.ProjectName.errors.required">Project name is required</div>
+                                <div *ngIf="pf.ProjectName.errors.minlength">Project name should be 6 characters long</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-4 pt-4">
+                            <div class="custom-control custom-checkbox">
+                                <input class="custom-control-input" type="checkbox" id="chkIsDatesManuallySet"
+                                    formControlName="IsDatesManuallySet" (change)="onManualDateChange()" />
+                                <label class="custom-control-label" for="chkIsDatesManuallySet">Set Dates</label>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="taskStartDate">Start Date</label>
+                            <input type="date" placeholder="Start date" id="projectStartDate" class="form-control"
+                                name="ProjectStartDate" formControlName="StartDate" />
+                            <div *ngIf="psubmitted && pf.StartDate.errors" class="invalid-feedback">
+                                <div *ngIf="pf.StartDate.errors.required">Project start date is required</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="taskEndDate">End Date</label>
+                            <input type="date" placeholder="End date" id="projectEndDate" class="form-control" name="ProjectEndDate"
+                                formControlName="EndDate" [ngClass]="{ 'is-invalid': psubmitted && pf.EndDate.errors }" />
+                            <div *ngIf="psubmitted && pf.EndDate.errors" class="invalid-feedback">
+                                <div *ngIf="pf.EndDate.errors.required">Project end date is required</div>
+                                <div *ngIf="pf.EndDate.errors.dateCompare">Project end date should be greater than start date</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-3 pt-3">
+                            <label>Priority</label> 
+                        </div>
+                        <div class="form-group col-9 fs--2">
+                            <ng5-slider id="priority" [options]="options" formControlName="Priority"></ng5-slider>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-12">
+                            <label for="managerName">Manager Name</label>                                
+                            <div class="input-group mb-3">
+                                <input type="text" placeholder="Manager name" id="managerName" class="form-control" 
+                                name="ManagerName" formControlName="ManagerName" aria-label="Manager name" 
+                                aria-describedby="btnManagerSearch" disabled [ngClass]="{ 'is-invalid': psubmitted && pf.ManagerName.errors }"/>
+                                <input type="hidden" id="ManagerID" name="ManagerID" formControlName="ManagerID" />
+                                <div class="input-group-append">
+                                    <button class="btn btn-falcon-success btn-sm" type="button" id="btnManagerSearch" (click)="onManagerSearch()">Search</button>
+                                </div>
+                                <div *ngIf="psubmitted && pf.ManagerName.errors" class="invalid-feedback">
+                                    <div *ngIf="pf.ManagerName.errors.required">Manager is required, search to select</div>
+                                </div>
+                            </div>                            
+                        </div>
+                    </div>
+                    <div class="form-row justify-content-between align-items-center">
+                        <div class="form-group col-4">
+                            <button type="submit" value="Add" class="btn btn-success btn-block">
+                                {{peditmode?"Update":"Add"}}
+                            </button>
+                        </div>
+                        <div class="form-group col-4">
+                            <button type="button" value="Reset" class="btn btn-danger btn-block" (click)="onFormReset()">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-7">
+        <div class="card">
+            <div class="bg-holder d-none d-lg-block bg-card" style="background-image:url(../assets/img/corner-3.png);"></div>
+            <div class="card-header bg-light">
+              <div class="row">
+                <div class="col-12 d-flex justify-content-between align-items-center">
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" placeholder="search by name" (keyup)="onSearchByName($event)">
+                    </div>
+                    <div class="col-auto">
+                        <div class="dropdown text-sans-serif" appDropdown #n="appDropdown">
+                            <button class="btn btn-falcon-default btn-sm dropdown-toggle" id="dropdownMenuButton" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-sort-amount-down" *ngIf="pSortField != '' && pIsSortAsc"></i>
+                            <i class="fas fa-sort-amount-down-alt" *ngIf="pSortField != '' && !pIsSortAsc"></i>
+                            <span class="d-none d-sm-inline-block ml-1">sort by</span></button>
+                            <div class="dropdown-menu dropdown-menu-right py-0" [ngClass]="{'show':n.isShown}" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" (click)="onSort('StartDate')">Start Date</a>
+                            <a class="dropdown-item" (click)="onSort('EndDate')">End Date</a>
+                            <a class="dropdown-item" (click)="onSort('Priority')">Priority</a>
+                            <a class="dropdown-item" (click)="onSort('CompletedTasks')">Completed</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="list-group list-group-flush">
+                    <div *ngFor="let project of projects"
+                        class="list-group-item list-group-item-action flex-column align-items-start">
+                        <div class="align-items-center row">
+                            <div class="col-6 py-1">
+                                <div class="align-items-center media">
+                                    <div class="avatar avatar-xxl mr-3">
+                                        <div class="avatar-name rounded-circle bg-soft-danger" *ngIf="project.Priority < 6">
+                                            <span class="text-danger avatar-font-size" >{{project.Priority}}</span>
+                                        </div>
+                                        <div class="avatar-name rounded-circle bg-soft-success" *ngIf="project.Priority >= 6 && project.Priority < 16">
+                                            <span class="text-success avatar-font-size" >{{project.Priority}}</span>
+                                        </div>
+                                        <div class="avatar-name rounded-circle bg-soft-secondary" *ngIf="project.Priority >= 16">
+                                            <span class="text-secondary avatar-font-size" >{{project.Priority}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="media-body">
+                                        <h6 class="mb-0 font-weight-semi-bold">
+                                            <a class="text-900 fs-0">{{project.ProjectName}}</a>                                            
+                                        </h6>
+                                        <p class="mb-0 mt-2">
+                                            <span class="font-italic text-500 mr-2 fs--1">starts</span>
+                                            <span class="font-weight-semi-bold fs--1">{{project.StartDate | date}}</span>
+                                            <span class="font-italic text-500 fs--1 mr-2 ml-2">ends</span>
+                                            <span class="font-weight-semi-bold fs--1">{{project.EndDate | date}}</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="align-items-center">
+                                    <p class="text-500 mr-3 fs--2">
+                                        Completed / No of tasks 
+                                    </p>
+                                </div>
+                                <div class="row flex-end-center no-gutters">
+                                    <div class="col-4 font-weight-bold fs--1">
+                                        {{project.CompletedTasks}}/{{project.NumberOfTasks}}
+                                    </div>
+                                    <div class="col-8 pr-card">
+                                        <div class="progress mr-2" style="height: 8px;">
+                                            <div class="progress-bar rounded-capsule" role="progressbar" [ngStyle]="{'width': (project.CompletedTasks > 0? (project.CompletedTasks/project.NumberOfTasks)*100 : 0)+'%'}" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>                                    
+                                </div>                                
+                            </div>
+                            <div class="col">
+                                <div class="justify-content-end align-items-center row">
+                                    <button type="button" 
+                                    class="btn btn-falcon-success btn-sm mr-3" 
+                                    (click)="onUpdateProject(project)"
+                                    [disabled]="project.IsSuspended">
+                                        Edit
+                                    </button>
+                                    <button type="button" 
+                                    class="btn btn-falcon-danger btn-sm mr-3" 
+                                    (click)="onSuspendProject(project)"
+                                    [disabled]="project.IsSuspended">
+                                        Suspend
+                                    </button>
+                                </div>
+                            </div>
+                        </div>            
+                    </div>
+                </div>
+            </div> 
+            <div class="card-footer" *ngIf="paging != null && paging.TotalPages > 1">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                      <li class="page-item" [ngClass]="{'disabled' : paging.PageIndex == 0}">
+                        <a class="page-link" tabindex="-1" 
+                        (click)="onPagingPrev()">
+                            <i class="fas fa-angle-double-left"></i>
+                        </a>
+                      </li>
+                      <li class="page-item" 
+                      *ngFor="let q of [].constructor(paging.TotalPages); let p = index" 
+                      [ngClass]="{'active': paging.PageIndex == p}"
+                      (click)="onPagingNumber(p)">
+                          <a class="page-link">{{p+1}}</a>
+                      </li>                        
+                      <li class="page-item" [ngClass]="{'disabled' : paging.PageIndex == (paging.TotalPages-1)}">
+                        <a class="page-link" (click)="onPagingNext()">
+                            <i class="fas fa-angle-double-right"></i>
+                        </a>
+                      </li>
+                    </ul>
+                  </nav>
+            </div>
+          </div>
+        </div>
+</div>

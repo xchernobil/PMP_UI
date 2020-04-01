@@ -1,0 +1,48 @@
+<div class="toolbar" role="banner">
+  <img width="80" alt="PMP" src="../assets/img/logo.png" style="margin-top: 6px;" />
+  <h5 style="margin-top: 10px;color:#ffffff">PROJECT MANAGEMENT PORTAL</h5>
+  <div class="spacer"></div>
+</div>
+<div class="content" role="main">
+  <ul class="nav nav-tabs" id="tab-strip" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link" id="project-tab" (click)="onTabChange($event)" [ngClass]="{'active': activeTab=='project-tab'}" data-toggle="tab" href="#" role="tab" aria-controls="tab-project"
+        aria-selected="true">
+        Add Project
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="task-tab" (click)="onTabChange($event)" [ngClass]="{'active': activeTab=='task-tab'}" data-toggle="tab" href="#" role="tab"
+        aria-controls="tab-task" aria-selected="false">
+        Add Task
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="user-tab" (click)="onTabChange($event)" [ngClass]="{'active': activeTab=='user-tab'}" data-toggle="tab" href="#" role="tab"
+        aria-controls="tab-user" aria-selected="false">
+        Add User
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="viewtask-tab" (click)="onTabChange($event)" [ngClass]="{'active': activeTab=='viewtask-tab'}" data-toggle="tab" href="#" role="tab"
+        aria-controls="tab-viewtask" aria-selected="false">
+        View Task
+      </a>
+    </li>
+  </ul>
+  <div class="tab-content border-x border-bottom p-3" id="tab-contents">
+    <div class="tab-pane fade" [ngClass]="{'show active': activeTab=='project-tab'}" id="tab-project" role="tabpanel" aria-labelledby="project-tab">
+      <app-project [reloadProjects]="needProjectsReload" ></app-project>
+    </div>
+    <div class="tab-pane fade" [ngClass]="{'show active': activeTab=='task-tab'}" id="tab-task" role="tabpanel" aria-labelledby="task-tab">
+      <app-task [selectedTask]="emittedTask" (onTaskCreated)="onReloadProjects($event)" (onTaskUpdated)="onReloadTasks($event)"></app-task>
+    </div>
+    <div class="tab-pane fade" [ngClass]="{'show active': activeTab=='user-tab'}" id="tab-user" role="tabpanel" aria-labelledby="user-tab">
+      <div app-user></div>
+    </div>
+    <div class="tab-pane fade" [ngClass]="{'show active': activeTab=='viewtask-tab'}" id="tab-viewtask" role="tabpanel" aria-labelledby="viewtask-tab">
+      <app-view (onTaskSelect)="openTaskTab($event)" (onTaskEnd)="onReloadProjects($event)" [RequireDataReload]="needTasksReload"></app-view>
+    </div>
+  </div>
+</div>
+<notifier-container></notifier-container>

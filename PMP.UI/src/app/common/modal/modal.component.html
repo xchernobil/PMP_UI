@@ -1,0 +1,21 @@
+<div class="modal-header">
+    <h5 class="modal-title">{{title}}</h5>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <input type="text" placeholder="type here to search" class="form-control" (keyup)="onSearchByTerm($event)" >
+    </div>
+    <ul class="list-group list-group-flush scrollable">
+        <button 
+        *ngFor="let item of listData" 
+        class="list-group-item list-group-item-action flex-column align-items-start py-2" (click)="onItemSelect(item.Code,item.Value)">
+        {{item.Value}}
+        </button>
+    </ul>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-falcon-success btn-sm mr-3" (click)="activeModal.close('Close click')">Cancel</button>
+  </div>

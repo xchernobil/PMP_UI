@@ -1,0 +1,152 @@
+<div class="row">
+    <div class="col-lg-5">
+        <div class="card">
+            <div class="bg-holder d-none d-lg-block bg-card" style="background-image:url(../assets/img/corner-4.png);"></div>
+            <div class="card-header bg-light">
+                <div class="row justify-content-between">
+                    <div class="col-auto">
+                        <h5>Add/Update User</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+                    <div class="form-row">
+                        <div class="form-group col-12">
+                            <label for="employeeID">Employee Id</label>  
+                            <input type="text" id="employeeID" name="EmployeeID" class="form-control" placeholder="Employee id"
+                                formControlName="EmployeeID" [ngClass]="{ 'is-invalid': usubmitted && uf.EmployeeID.errors }">
+                            <input type="hidden" id="userId" name="UserID" formControlName="UserID">
+                            <div *ngIf="usubmitted && uf.EmployeeID.errors" class="invalid-feedback">
+                                <div *ngIf="uf.EmployeeID.errors.required">Employee Id is required</div>
+                                <div *ngIf="uf.EmployeeID.errors.pattern">Employee Id should be a 4 digit number</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-6">
+                            <label for="firstName">First Name</label>  
+                            <input type="text" id="firstName" name="FirstName" class="form-control" placeholder="First name"
+                                formControlName="FirstName" [ngClass]="{ 'is-invalid': usubmitted && uf.FirstName.errors }">
+                                <div *ngIf="usubmitted && uf.FirstName.errors" class="invalid-feedback">
+                                    <div *ngIf="uf.FirstName.errors.required">First name is required</div>
+                                    <div *ngIf="uf.FirstName.errors.pattern">First name should be alphabets only</div>
+                                </div>
+                        </div>
+                        <div class="form-group col-6">
+                            <label for="lastName">Last Name</label>
+                            <input type="text" id="lastName" name="LastName" class="form-control" placeholder="Last name"
+                                formControlName="LastName" [ngClass]="{ 'is-invalid': usubmitted && uf.LastName.errors }">
+                                <div *ngIf="usubmitted && uf.LastName.errors" class="invalid-feedback">
+                                    <div *ngIf="uf.LastName.errors.required">Last name is required</div>
+                                    <div *ngIf="uf.LastName.errors.pattern">Last name should be alphabets only</div>
+                                </div>
+                        </div>
+                    </div>
+                    <div class="form-row justify-content-between align-items-center">
+                        <div class="form-group col-4">
+                            <button type="submit" value="Add" class="btn btn-success btn-block">
+                                {{isEditMode?"Update":"Add"}}
+                            </button>
+                        </div>
+                        <div class="form-group col-4">
+                            <button type="button" value="Reset" class="btn btn-primary btn-block" (click)="onReset()">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-7">
+        <div class="card">
+            <div class="bg-holder d-none d-lg-block bg-card" style="background-image:url(../assets/img/corner-3.png);"></div>
+            <div class="card-header bg-light">
+              <div class="row">
+                <div class="col-12 d-flex justify-content-between align-items-center">
+                <div class="col-6 col-sm-auto d-flex align-items-center pr-0">
+                    <input type="text" class="form-control" placeholder="search by name" (keyup)="onSearchByName($event)">
+                </div>
+                <div class="col-auto">
+                    <div class="dropdown text-sans-serif" appDropdown #n="appDropdown">
+                        <button class="btn btn-falcon-default btn-sm dropdown-toggle" id="dropdownMenuButton" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-sort-amount-down" *ngIf="uSortField != '' && uIsSortAsc"></i>
+                        <i class="fas fa-sort-amount-down-alt" *ngIf="uSortField != '' && !uIsSortAsc"></i>
+                        <span class="d-none d-sm-inline-block ml-1">sort by</span></button>
+                        <div class="dropdown-menu dropdown-menu-right py-0" [ngClass]="{'show':n.isShown}" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" (click)="onSort('FirstName')">First Name</a>
+                        <a class="dropdown-item" (click)="onSort('LastName')">Last Name</a>
+                        <a class="dropdown-item" (click)="onSort('EmployeeID')">EmployeeID</a>
+                        </div>
+                    </div>
+                </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-body p-0" style="height: 398px;">
+                <div class="list-group list-group-flush">
+                    <div *ngFor="let user of users"
+                        class="list-group-item list-group-item-action flex-column align-items-start">
+                        <div class="align-items-center row">
+                            <div class="col py-1">
+                                <div class="align-items-center media">
+                                    <div class="avatar avatar-xxl mr-3">
+                                        <div class="avatar-name rounded-circle bg-soft-success">
+                                            <span class="fs-0 text-success">{{user.FirstName.substring(0,1)}}{{user.LastName.substring(0,1)}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="media-body">
+                                        <h6 class="mb-0 font-weight-semi-bold">
+                                            <a class="text-900">{{user.FirstName}}  {{user.LastName}}</a>
+                                        </h6>                                    
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="align-items-center">
+                                    <p class="mb-0 font-weight-semi-bold">
+                                        <a class="text-500 mr-3 fs--1">Emp Id -</a><a class="text-900">{{user.EmployeeID}}</a>
+                                    </p> 
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="justify-content-end align-items-center row">
+                                    <button type="button" class="btn btn-falcon-success btn-sm mr-3" (click)="onEditUser(user)">
+                                        Edit
+                                    </button>
+                                    <button type="button" class="btn btn-falcon-danger btn-sm mr-3" (click)="onDeleteUser(user)">
+                                        Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+            <div class="card-footer" *ngIf="paging != null && paging.TotalPages > 1">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                      <li class="page-item" [ngClass]="{'disabled' : paging.PageIndex == 0}">
+                        <a class="page-link" tabindex="-1" 
+                        (click)="onPagingPrev()">
+                            <i class="fas fa-angle-double-left"></i>
+                        </a>
+                      </li>
+                      <li class="page-item" 
+                      *ngFor="let q of [].constructor(paging.TotalPages); let p = index" 
+                      [ngClass]="{'active': paging.PageIndex == p}"
+                      (click)="onPagingNumber(p)">
+                          <a class="page-link">{{p+1}}</a>
+                      </li>                        
+                      <li class="page-item" [ngClass]="{'disabled' : paging.PageIndex == (paging.TotalPages-1)}">
+                        <a class="page-link" (click)="onPagingNext()">
+                            <i class="fas fa-angle-double-right"></i>
+                        </a>
+                      </li>
+                    </ul>
+                  </nav>
+            </div>           
+          </div>
+        </div>
+</div>

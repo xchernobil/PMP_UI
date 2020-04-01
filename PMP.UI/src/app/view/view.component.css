@@ -1,0 +1,8 @@
+.disabled-sorting {
+    pointer-events: none;
+    opacity: 0.4;
+}
+
+.capsule-width{
+    width: 35px;
+}
